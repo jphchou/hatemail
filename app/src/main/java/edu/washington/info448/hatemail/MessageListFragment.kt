@@ -1,49 +1,46 @@
-package edu.washington.info448.hatemail
+package edu.washington.jchou8.quizdroid
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
+import android.os.Message
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
+import edu.washington.info448.hatemail.MessageListRecyclerAdapter
+import edu.washington.info448.hatemail.MessageType
+import edu.washington.info448.hatemail.R
 
+private const val ARG_MESSAGE_TYPES = "messageTypes"
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class MessageListFragment: Fragment() {
+    private var messageTypes: List<MessageType>? = null
+    private var listener: OnMessageSelectListener? = null
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [MessageListFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- *
- */
-class MessageListFragment : Fragment() {
-    private var listener: OnFragmentInteractionListener? = null
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_message_list, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            messageTypes = it.getParcelableArrayList(ARG_MESSAGE_TYPES)
+        }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val rootView = inflater.inflate(R.layout.fragment_message_list, container, false)
+        val recyclerView = rootView.findViewById(R.id.list_messages) as RecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(rootView.context, LinearLayout.VERTICAL, false)
+        val adapter = MessageListRecyclerAdapter(messageTypes!!)
+        recyclerView.adapter = adapter
+        return rootView
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
+        listener = context as OnMessageSelectListener
     }
 
     override fun onDetach() {
@@ -51,20 +48,17 @@ class MessageListFragment : Fragment() {
         listener = null
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+    interface OnMessageSelectListener {
+        fun onMessageSelect()
     }
 
+    companion object {
+        @JvmStatic
+        fun newInstance(list: ArrayList<MessageType>) =
+            MessageListFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelableArrayList(ARG_MESSAGE_TYPES, list)
+                }
+            }
+    }
 }
