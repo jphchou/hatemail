@@ -1,28 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-             <!--xmlns:tools="http://schemas.android.com/tools"-->
-             <!--android:layout_width="match_parent"-->
-             <!--android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"-->
-             <!--tools:context=".HistoryFragment">-->
-
-    <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:id="@+id/historyListView"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="550dp"-->
-            <!--app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>-->
-
-<!--</LinearLayout>-->
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
-             android:layout_height="match_parent"
+             android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
              tools:context=".HistoryFragment">
 
-    <TextView
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/historyListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="First tab"
-            android:textSize="40sp" android:gravity="center"/>
+            android:layout_height="550dp"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
 
-</FrameLayout>
+</LinearLayout>
+
