@@ -33,6 +33,7 @@ class MessageListFragment: Fragment() {
         val rootView = inflater.inflate(R.layout.fragment_message_list, container, false)
         val recyclerView = rootView.findViewById(R.id.list_messages) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(rootView.context, LinearLayout.VERTICAL, false)
+        (recyclerView.layoutManager as LinearLayoutManager).isMeasurementCacheEnabled = false
         val adapter = MessageListRecyclerAdapter(messageTypes!!)
         recyclerView.adapter = adapter
         return rootView

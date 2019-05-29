@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-             android:layout_height="match_parent">
-    <TextView
-            android:text="Placeholder"
+             xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/message_name" android:textSize="24sp"
-            android:padding="10dp"/>
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            >
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:orientation="vertical">
+            <TextView
+                    android:text="Placeholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/message_name" android:textSize="24sp"
+                    android:padding="10dp"/>
+
+            <Button android:layout_width="wrap_content"
+                    android:text="use"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
 </FrameLayout>
