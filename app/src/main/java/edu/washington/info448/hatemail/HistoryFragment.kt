@@ -27,6 +27,7 @@ class HistoryFragment : Fragment() {
             val args = Bundle().apply {
                 putParcelableArrayList(HISTORY_KEY, histories)
             }
+
             val fragment = HistoryFragment().apply {
                 arguments = args
             }
