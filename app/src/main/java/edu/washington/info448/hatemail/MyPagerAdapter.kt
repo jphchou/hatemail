@@ -20,7 +20,7 @@ class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> {
-                FirstFragment()
+                HistoryFragment.newInstance(myHistories)
             }
             1 -> HistoryFragment.newInstance(myHistories)
             else -> {
@@ -30,15 +30,15 @@ class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     }
 
     override fun getCount(): Int {
-        return 3
+        return 2
     }
 
     override fun getPageTitle(position: Int): CharSequence {
         return when (position) {
-            0 -> "First Tab"
-            1 -> "Second Tab"
+            0 -> "History"
+            1 -> "Schedule"
             else -> {
-                return "Third Tab"
+                return "History"
             }
         }
     }
