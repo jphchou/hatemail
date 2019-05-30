@@ -15,6 +15,8 @@ import android.content.SharedPreferences
 class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     private var histories = arrayListOf(his1, his2, his3)
     lateinit var myHistories: ArrayList<History>
+    lateinit var mySchedules: ArrayList<Schedule>
+
 //    lateinit var myScedules: ArrayList<Schedule>
 
     override fun getItem(position: Int): Fragment {
@@ -22,7 +24,7 @@ class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
             0 -> {
                 HistoryFragment.newInstance(myHistories)
             }
-            1 -> HistoryFragment.newInstance(myHistories)
+            1 -> ScheduleListFragment.newInstance(mySchedules)
             else -> {
                 return HistoryFragment.newInstance(histories)
             }
