@@ -19,8 +19,9 @@ import android.R.id.edit
 
 class MainActivity : AppCompatActivity() {
     var histories = arrayListOf<History>(his1, his2, his3)
+    var schedules = arrayListOf<Schedule>(sche1, sche2, sche3)
     lateinit var myHistories: ArrayList<History>
-//    lateinit var mySchedules: ArrayList<Schedule>
+    lateinit var mySchedules: ArrayList<Schedule>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,23 +34,26 @@ class MainActivity : AppCompatActivity() {
         val dummyHistory = gson.toJson(histories)
         prefsEditor.putString("Histories", dummyHistory)
         prefsEditor.commit()
+        val dummySchedule = gson.toJson(schedules)
+        prefsEditor.putString("Schedules", dummySchedule)
+        prefsEditor.commit()
         /////
         val json = appSharedPrefs.getString("Histories", "")
         val type = object : TypeToken<List<History>>() {
         }.type
 
-//        val json2 = appSharedPrefs.getString("Schedules", "")
-//        val type2 = object : TypeToken<List<Schedule>>() {
-//        }.type
+        val json2 = appSharedPrefs.getString("Schedules", "")
+        val type2 = object : TypeToken<List<Schedule>>() {
+        }.type
 
         this.myHistories = gson.fromJson(json, type)
-//        this.mySchedules = gson.fromJson(json2, type2)
+        this.mySchedules = gson.fromJson(json2, type2)
 
 
 
         val fragmentAdapter = MyPagerAdapter(supportFragmentManager)
         fragmentAdapter.myHistories = this.myHistories
-//        fragmentAdapter.myScedules = this.mySchedules
+        fragmentAdapter.mySchedules = this.mySchedules
         viewpager_main.adapter = fragmentAdapter
 
         tabs_main.setupWithViewPager(viewpager_main)

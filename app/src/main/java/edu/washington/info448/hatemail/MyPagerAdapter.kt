@@ -17,8 +17,6 @@ class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     lateinit var myHistories: ArrayList<History>
     lateinit var mySchedules: ArrayList<Schedule>
 
-//    lateinit var myScedules: ArrayList<Schedule>
-
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> {
@@ -26,7 +24,7 @@ class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
             }
             1 -> ScheduleListFragment.newInstance(mySchedules)
             else -> {
-                return HistoryFragment.newInstance(histories)
+                return HistoryFragment.newInstance(myHistories)
             }
         }
     }
