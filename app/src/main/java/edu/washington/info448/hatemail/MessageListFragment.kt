@@ -35,6 +35,11 @@ class MessageListFragment: Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(rootView.context, LinearLayout.VERTICAL, false)
         (recyclerView.layoutManager as LinearLayoutManager).isMeasurementCacheEnabled = false
         val adapter = MessageListRecyclerAdapter(messageTypes!!)
+
+        adapter.onMessageClickedListener = { position, _ ->
+            listener!!.onMessageSelect(position)
+        }
+
         recyclerView.adapter = adapter
         return rootView
     }
@@ -50,7 +55,7 @@ class MessageListFragment: Fragment() {
     }
 
     interface OnMessageSelectListener {
-        fun onMessageSelect()
+        fun onMessageSelect(position: Int)
     }
 
     companion object {

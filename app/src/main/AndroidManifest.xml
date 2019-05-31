@@ -3,6 +3,7 @@
           package="edu.washington.info448.hatemail">
 
     <application
+            android:name=".HateMail"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"

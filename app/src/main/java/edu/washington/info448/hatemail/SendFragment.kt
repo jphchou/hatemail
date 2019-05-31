@@ -4,46 +4,53 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import edu.washington.jchou8.quizdroid.MessageListFragment
+import kotlinx.android.synthetic.main.fragment_send.*
 
+private const val ARG_MESSAGE = "message"
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class SendFragment: Fragment() {
+    private var message: MessageType? = null
+    private var listener: OnMessageSendListener? = null
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [SendFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- *
- */
-class SendFragment : Fragment() {
-    private var listener: OnFragmentInteractionListener? = null
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_send, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            message = it.getParcelable(ARG_MESSAGE)
+        }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val rootView = inflater.inflate(R.layout.fragment_send, container, false)
+
+        for (i in 0..2) {
+            val txtResID = resources.getIdentifier("txt_param%d".format(i+1), "id", context!!.packageName)
+            val txtView = rootView.findViewById<TextView>(txtResID)
+
+            if (message!!.fields.size >= i + 1) {
+                val field = message!!.fields[i]
+                txtView.text = field
+            } else {
+                val edtResID = resources.getIdentifier("edt_param%d".format(i+1), "id", context!!.packageName)
+                val edtView = rootView.findViewById<TextView>(edtResID)
+                txtView.visibility = View.INVISIBLE
+                edtView.visibility = View.INVISIBLE
+            }
+        }
+
+        return rootView
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
-        }
+        listener = context as OnMessageSendListener
     }
 
     override fun onDetach() {
@@ -51,20 +58,18 @@ class SendFragment : Fragment() {
         listener = null
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+    interface OnMessageSendListener {
+        fun onMessageSend(position: Int)
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(message: MessageType) =
+            SendFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(ARG_MESSAGE, message)
+                }
+            }
     }
 
 }
