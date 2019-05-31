@@ -13,8 +13,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlin.collections.ArrayList
 import android.R.id.edit
-
-
+import android.content.Intent
+import android.view.Menu
+import android.view.MenuItem
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,6 +28,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+        // set up share preference
         val appSharedPrefs = this.getSharedPreferences("prefs", 0)
         val prefsEditor = appSharedPrefs.edit()
         val gson = Gson()
@@ -58,9 +61,22 @@ class MainActivity : AppCompatActivity() {
 
         tabs_main.setupWithViewPager(viewpager_main)
 
-//        val historyFragment = HistoryFragment.newInstance(histories)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        var inflatar = menuInflater
+        inflatar.inflate(R.menu.cos_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+//        val settingFragment = SettingFragment()
 //        supportFragmentManager.beginTransaction()
-//            .replace(R.id.container, historyFragment, "QUIZ_INTRO_FRAGMENT")
+//            .replace(R.id.container, settingFragment, "SETTING_FRAGMENT")
 //            .commit()
+        val intent = Intent(this, PreferencesActivity::class.java)
+
+        startActivity(intent)
+        return super.onOptionsItemSelected(item)
     }
 }
