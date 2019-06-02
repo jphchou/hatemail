@@ -12,6 +12,9 @@
         <activity
                 android:name=".PreferencesActivity"
                 android:label="@string/title_activity_preferences">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".MainActivity"/>
         </activity>
         <activity android:name=".MessageActivity">
         </activity>

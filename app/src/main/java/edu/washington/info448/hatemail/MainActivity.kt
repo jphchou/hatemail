@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken
 import kotlin.collections.ArrayList
 import android.R.id.edit
 import android.content.Intent
+import android.support.v7.app.ActionBar
 import android.view.Menu
 import android.view.MenuItem
 
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     var schedules = arrayListOf<Schedule>(sche1, sche2, sche3)
     lateinit var myHistories: ArrayList<History>
     lateinit var mySchedules: ArrayList<Schedule>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
