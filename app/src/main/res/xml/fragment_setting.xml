@@ -6,12 +6,12 @@
 
 
     <SwitchPreferenceCompat
-            app:key="notifications"
-            app:title="Enable message notifications"/>
+            app:key="darkMode"
+            app:title="Dark Mode"/>
 
     <Preference
-            app:key="feedback"
-            app:title="Send feedback"
-            app:summary="Report technical issues or suggest new features" background="#FFFFFF"/>
+            app:key="default"
+            app:title="Edit Parameter Name"
+            app:summary="Edit the default from parameter" background="#FFFFFF"/>
 
 </PreferenceScreen>
