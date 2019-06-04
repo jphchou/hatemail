@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme.Primary.Base.Light" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="light" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -10,7 +10,7 @@
         <item name="android:navigationBarDividerColor">#F2F2F3</item>
     </style>
 
-    <style name="AppTheme.Primary.Base.Dark" parent="Theme.AppCompat">
+    <style name="dark" parent="Theme.AppCompat">
         <item name="colorAccent">@color/colorAccent</item>
         <!--<item name="android:background">#484D52</item>-->
         <item name="android:textColor">#FFFF</item>

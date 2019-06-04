@@ -30,6 +30,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        if (HateMailApp.getSingletonInstance().isNightModeEnabled()) {
+            setTheme(R.style.dark);
+        }
 
         // set up share preference
         val appSharedPrefs = this.getSharedPreferences("prefs", 0)
