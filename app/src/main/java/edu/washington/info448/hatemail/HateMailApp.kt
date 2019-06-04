@@ -11,8 +11,8 @@ class HateMailApp :Application(){
     override fun onCreate() {
         super.onCreate()
 
-        val mPrefs:SharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
-        isNightModeEnabled = mPrefs.getBoolean("DARK_MODE", false);
+        val mPrefs:SharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this)
+        isNightModeEnabled = mPrefs.getBoolean("DARK_MODE", false)
 
     }
 
@@ -31,5 +31,9 @@ class HateMailApp :Application(){
         fun getSingletonInstance(): HateMailApp {
             return instance!!
         }
+    }
+
+    init {
+        instance = this
     }
 }
