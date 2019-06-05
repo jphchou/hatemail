@@ -3,16 +3,19 @@ package edu.washington.info448.hatemail
 import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import android.util.Log
 
 class HateMailApp :Application(){
-    private lateinit var sharedPreferences: SharedPreferences
+//    private lateinit var sharedPreferences: SharedPreferences
     private var isNightModeEnabled:Boolean = false
 
     override fun onCreate() {
         super.onCreate()
 
         val mPrefs:SharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this)
-        isNightModeEnabled = mPrefs.getBoolean("DARK_MODE", false)
+//        isNightModeEnabled = mPrefs.getBoolean("DARK_MODE", false)
+        isNightModeEnabled = mPrefs.getBoolean("darkMode", false)
+        Log.i("hahahaha", isNightModeEnabled.toString())
 
     }
 

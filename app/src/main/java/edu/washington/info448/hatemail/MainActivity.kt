@@ -15,24 +15,26 @@ import kotlin.collections.ArrayList
 import android.R.id.edit
 import android.content.Intent
 import android.support.v7.app.ActionBar
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 
 
-class MainActivity : AppCompatActivity() {
-    var histories = arrayListOf<History>(his1, his2, his3)
-    var schedules = arrayListOf<Schedule>(sche1, sche2, sche3)
+class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
+    var histories = arrayListOf(his1, his2, his3)
+    var schedules = arrayListOf(sche1, sche2, sche3)
     lateinit var myHistories: ArrayList<History>
     lateinit var mySchedules: ArrayList<Schedule>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (HateMailApp.getSingletonInstance().isNightModeEnabled() == true) {
+            setTheme(R.style.dark)
+        } else {
+            setTheme(R.style.light)
+        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        if (HateMailApp.getSingletonInstance().isNightModeEnabled()) {
-            setTheme(R.style.dark);
-        }
 
         // set up share preference
         val appSharedPrefs = this.getSharedPreferences("prefs", 0)
