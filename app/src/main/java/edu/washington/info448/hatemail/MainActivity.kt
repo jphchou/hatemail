@@ -20,7 +20,7 @@ import android.view.Menu
 import android.view.MenuItem
 
 
-class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
+class MainActivity : AppCompatActivity() {
     var histories = arrayListOf(his1, his2, his3)
     var schedules = arrayListOf(sche1, sche2, sche3)
     lateinit var myHistories: ArrayList<History>
@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.i("hahahahahaha", HateMailApp.getSingletonInstance().isNightModeEnabled().toString())
         if (HateMailApp.getSingletonInstance().isNightModeEnabled() == true) {
             setTheme(R.style.dark)
         } else {
