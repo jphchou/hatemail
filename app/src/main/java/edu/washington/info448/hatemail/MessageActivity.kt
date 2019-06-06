@@ -65,7 +65,6 @@ class MessageActivity : AppCompatActivity(),
         val queue = Volley.newRequestQueue(applicationContext)
         val stringRequest = object: StringRequest(Request.Method.GET, reqUrl,
             Response.Listener<String> { response ->
-                val schedule = Schedule(phone, response, freq)
                 Log.i("MESSAGE_ACTIVITY", "scheduling \"%s\" sent to %s every %s ms".format(response, phone, freq))
 
                 val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -73,6 +72,7 @@ class MessageActivity : AppCompatActivity(),
                 intent.putExtra("message", response)
                 intent.putExtra("phone", phone)
                 val pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+                val schedule = Schedule(phone, response, freq, pendingIntent)
                 alarmManager.setRepeating(
                     AlarmManager.ELAPSED_REALTIME_WAKEUP,
                     SystemClock.elapsedRealtime(),
