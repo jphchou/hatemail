@@ -57,24 +57,35 @@ class SendFragment: Fragment() {
             } else if (edtFreq.text.isBlank()) {
                 Toast.makeText(context, "No frequency provided.", Toast.LENGTH_SHORT).show()
             } else {
-                var allFieldsValid = true
-                for (i in 0..2) {
-                    val edtResID = resources.getIdentifier("edt_param%d".format(i+1), "id", context!!.packageName)
-                    val edtView = rootView.findViewById<TextView>(edtResID)
-                    if (message!!.fields.size >= i + 1) {
-                        if (edtView.text.isBlank()) {
-                            val field = message!!.fields[i]
-                            Toast.makeText(context, "No value provided for %s.".format(field), Toast.LENGTH_SHORT).show()
-                            allFieldsValid = false
-                            break
-                        } else {
-                            fields[message!!.fields[i].toLowerCase()] = edtView.text.toString()
+                val freq = edtFreq.text.toString().toIntOrNull()
+                if (freq === null || freq <= 0) {
+                    Toast.makeText(context, "Invalid frequency provided.", Toast.LENGTH_SHORT).show()
+                } else {
+                    var allFieldsValid = true
+                    for (i in 0..2) {
+                        val edtResID = resources.getIdentifier("edt_param%d".format(i + 1), "id", context!!.packageName)
+                        val edtView = rootView.findViewById<TextView>(edtResID)
+                        if (message!!.fields.size >= i + 1) {
+                            if (edtView.text.isBlank()) {
+                                val field = message!!.fields[i]
+                                Toast.makeText(context, "No value provided for %s.".format(field), Toast.LENGTH_SHORT)
+                                    .show()
+                                allFieldsValid = false
+                                break
+                            } else {
+                                fields[message!!.fields[i].toLowerCase()] = edtView.text.toString()
+                            }
                         }
                     }
-                }
 
-                if (allFieldsValid) {
-                    listener!!.onMessageSend(edtPhone.text.toString(), edtFreq.text.toString().toLong(), message!!.url, fields)
+                    if (allFieldsValid) {
+                        listener!!.onMessageSend(
+                            edtPhone.text.toString(),
+                            (freq * 1000 * 60).toLong(),
+                            message!!.url,
+                            fields
+                        )
+                    }
                 }
             }
         }
