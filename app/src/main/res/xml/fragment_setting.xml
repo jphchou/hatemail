@@ -9,8 +9,8 @@
             app:key="darkMode"
             app:title="Dark Mode"/>
 
-    <Preference
-            app:key="default"
+    <EditTextPreference
+            app:key="editParameter"
             app:title="Edit Parameter Name"
             app:summary="Edit the default from parameter" background="#FFFFFF"/>
 

@@ -8,15 +8,18 @@ import android.util.Log
 class HateMailApp :Application(){
 //    private lateinit var sharedPreferences: SharedPreferences
     private var isNightModeEnabled:Boolean = false
+    private var inputParameter:String = ""
 
     override fun onCreate() {
         super.onCreate()
 
         val mPrefs:SharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this)
-//        isNightModeEnabled = mPrefs.getBoolean("DARK_MODE", false)
         isNightModeEnabled = mPrefs.getBoolean("darkMode", false)
-        Log.i("hahahaha", isNightModeEnabled.toString())
+        inputParameter = mPrefs.getString("editParameter", "")
+    }
 
+    fun setParameter(inputParameter: String){
+        this.inputParameter = inputParameter
     }
 
     fun isNightModeEnabled(): Boolean {

@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import java.util.prefs.Preferences
 import android.preference.Preference as Preference
 import android.preference.PreferenceManager
+import android.util.Log
 
 
 class SettingFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -38,6 +39,10 @@ class SettingFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
 
         if(key == "darkMode"){
             HateMailApp.getSingletonInstance().setIsNightModeEnabled(PreferenceManager.getDefaultSharedPreferences(HateMailApp.getSingletonInstance()).getBoolean("darkMode", false))
+        }
+
+        if(key == "editParameter"){
+            HateMailApp.getSingletonInstance().setParameter(PreferenceManager.getDefaultSharedPreferences(HateMailApp.getSingletonInstance()).getString("editParameter", ""))
         }
     }
 
