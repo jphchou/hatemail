@@ -9,8 +9,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import edu.washington.jchou8.quizdroid.MessageListFragment
 import kotlinx.android.synthetic.main.fragment_send.*
 
@@ -45,6 +47,38 @@ class SendFragment: Fragment() {
             }
         }
 
+        val scheduleBtn = rootView.findViewById<Button>(R.id.btn_schedule)
+        scheduleBtn.setOnClickListener {
+            val edtPhone = rootView.findViewById<TextView>(R.id.edt_phone)
+            val edtFreq = rootView.findViewById<TextView>(R.id.edt_freq)
+            val fields = mutableMapOf<String, String>()
+            if (edtPhone.text.isBlank()) {
+                Toast.makeText(context, "No phone number provided.", Toast.LENGTH_SHORT).show()
+            } else if (edtFreq.text.isBlank()) {
+                Toast.makeText(context, "No frequency provided.", Toast.LENGTH_SHORT).show()
+            } else {
+                var allFieldsValid = true
+                for (i in 0..2) {
+                    val edtResID = resources.getIdentifier("edt_param%d".format(i+1), "id", context!!.packageName)
+                    val edtView = rootView.findViewById<TextView>(edtResID)
+                    if (message!!.fields.size >= i + 1) {
+                        if (edtView.text.isBlank()) {
+                            val field = message!!.fields[i]
+                            Toast.makeText(context, "No value provided for %s.".format(field), Toast.LENGTH_SHORT).show()
+                            allFieldsValid = false
+                            break
+                        } else {
+                            fields[message!!.fields[i].toLowerCase()] = edtView.text.toString()
+                        }
+                    }
+                }
+
+                if (allFieldsValid) {
+                    listener!!.onMessageSend(edtPhone.text.toString(), edtFreq.text.toString().toLong(), message!!.url, fields)
+                }
+            }
+        }
+
         return rootView
     }
 
@@ -59,7 +93,7 @@ class SendFragment: Fragment() {
     }
 
     interface OnMessageSendListener {
-        fun onMessageSend(position: Int)
+        fun onMessageSend(phone: String, freq: Long, url: String, fields: Map<String, String>)
     }
 
     companion object {
