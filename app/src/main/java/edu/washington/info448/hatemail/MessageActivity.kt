@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.SystemClock
 import android.support.v4.app.ActivityCompat
+import android.support.v4.app.DialogFragment
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import com.android.volley.Request
@@ -23,7 +24,13 @@ const val SEND_FRAG = "SEND_FRAG"
 
 class MessageActivity : AppCompatActivity(),
     MessageListFragment.OnMessageSelectListener,
-    SendFragment.OnMessageSendListener {
+    SendFragment.OnMessageSendListener,
+    PreviewDialog.PreviewDialogListener {
+
+    private var message: String? = null
+    private var freq: Long? = null
+    private var phone: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message)
@@ -56,28 +63,23 @@ class MessageActivity : AppCompatActivity(),
         }
     }
 
-    override fun onMessageSend(phone: String, freq: Long, url: String, fields: Map<String, String>) {
+    fun getReqUrl(url: String, fields: Map<String, String>): String {
         var reqUrl = "http://www.foaas.com%s".format(url)
         fields.forEach{
             reqUrl = reqUrl.replace(":%s".format(it.key), it.value)
         }
+        return reqUrl
+    }
 
+    override fun onMessageSend(phone: String, freq: Long, url: String, fields: Map<String, String>) {
         val queue = Volley.newRequestQueue(applicationContext)
-        val stringRequest = object: StringRequest(Request.Method.GET, reqUrl,
+        val stringRequest = object: StringRequest(Request.Method.GET, getReqUrl(url, fields),
             Response.Listener<String> { response ->
-                Log.i("MESSAGE_ACTIVITY", "scheduling \"%s\" sent to %s every %s ms".format(response, phone, freq))
-
-                val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                val intent = Intent(applicationContext, MessageReceiver::class.java)
-                intent.putExtra("message", response)
-                intent.putExtra("phone", phone)
-                val pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-                val schedule = Schedule(phone, response, freq, pendingIntent)
-                alarmManager.setRepeating(
-                    AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime(),
-                    freq,
-                    pendingIntent)
+                val previewDialog = PreviewDialog.newInstance(response)
+                previewDialog.show(supportFragmentManager, "preview")
+                this.phone = phone
+                this.freq = freq
+                this.message = response
             },
             Response.ErrorListener {error ->
                 Log.e(TAG, "Request failed: %s".format(error.toString()))
@@ -90,5 +92,20 @@ class MessageActivity : AppCompatActivity(),
             }
         }
         queue.add(stringRequest)
+    }
+
+    override fun onDialogPositiveClick(dialog: DialogFragment) {
+        Log.i("MESSAGE_ACTIVITY", "scheduling \"%s\" sent to %s every %s ms".format(message, phone, freq))
+        val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(applicationContext, MessageReceiver::class.java)
+        intent.putExtra("message", message!!)
+        intent.putExtra("phone", phone!!)
+        val pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val schedule = Schedule(phone!!, message!!, freq!!, pendingIntent)
+        alarmManager.setRepeating(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime(),
+            freq!!,
+            pendingIntent)
     }
 }
