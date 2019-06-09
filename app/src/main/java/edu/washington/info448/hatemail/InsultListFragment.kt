@@ -18,7 +18,7 @@ import edu.washington.info448.hatemail.R
 
 private const val ARG_MESSAGE_TYPES = "messageTypes"
 
-class MessageListFragment: Fragment() {
+class InsultListFragment: Fragment() {
     private var messageTypes: List<MessageType>? = null
     private var listener: OnMessageSelectListener? = null
 
@@ -61,7 +61,7 @@ class MessageListFragment: Fragment() {
     companion object {
         @JvmStatic
         fun newInstance(list: ArrayList<MessageType>) =
-            MessageListFragment().apply {
+            InsultListFragment().apply {
                 arguments = Bundle().apply {
                     putParcelableArrayList(ARG_MESSAGE_TYPES, list)
                 }

@@ -17,13 +17,13 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import edu.washington.jchou8.quizdroid.MessageListFragment
+import edu.washington.jchou8.quizdroid.InsultListFragment
 
 const val MESSAGE_LIST_FRAG = "MESSAGE_LIST_FRAG"
 const val SEND_FRAG = "SEND_FRAG"
 
 class MessageActivity : AppCompatActivity(),
-    MessageListFragment.OnMessageSelectListener,
+    InsultListFragment.OnMessageSelectListener,
     SendFragment.OnMessageSendListener,
     PreviewDialog.PreviewDialogListener {
 
@@ -46,7 +46,7 @@ class MessageActivity : AppCompatActivity(),
                 2)
         }
 
-        val messageListFrag = MessageListFragment.newInstance(ArrayList(HateMail.instance.dataManager.getData()))
+        val messageListFrag = InsultListFragment.newInstance(ArrayList(HateMail.instance.dataManager.getData()))
         supportFragmentManager.beginTransaction().run {
             replace(R.id.message_container, messageListFrag, MESSAGE_LIST_FRAG)
             commit()

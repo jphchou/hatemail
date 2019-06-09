@@ -13,7 +13,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import edu.washington.jchou8.quizdroid.MessageListFragment
+import edu.washington.jchou8.quizdroid.InsultListFragment
 import kotlinx.android.synthetic.main.fragment_send.*
 
 private const val ARG_MESSAGE = "message"
