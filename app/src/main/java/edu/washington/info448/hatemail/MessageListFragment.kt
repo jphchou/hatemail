@@ -35,7 +35,7 @@ class MessageListFragment : Fragment() {
             val histories = it.getParcelableArrayList<History>(HISTORY_KEY)as ArrayList<History>
 
             val adapter = HistoryRecyclerViewAdapter(histories)
-            val historyListView = rootView.findViewById(R.id.scheduleListView) as RecyclerView
+            val historyListView = rootView.findViewById(R.id.historyListView) as RecyclerView
             historyListView.adapter = adapter
             historyListView.setHasFixedSize(true)
         }

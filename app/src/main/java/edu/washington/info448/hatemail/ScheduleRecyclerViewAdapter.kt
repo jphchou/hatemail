@@ -18,7 +18,7 @@ class ScheduleRecyclerViewAdapter(var schedules:ArrayList<Schedule>) : RecyclerV
     override fun getItemCount(): Int = schedules.size
 
     override fun onBindViewHolder(viewHolder: ScheduleListViewHolder, position: Int) {
-        viewHolder.bindView(schedules[position].recipient, schedules[position].messsage, schedules[position].frequency.toString(), position)
+        viewHolder.bindView(schedules[position].recipient, schedules[position].message, schedules[position].frequency.toString(), position)
     }
 
     inner class ScheduleListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

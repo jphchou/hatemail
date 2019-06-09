@@ -18,7 +18,7 @@ class HistoryRecyclerViewAdapter(var histories:ArrayList<History>) : RecyclerVie
     override fun getItemCount(): Int = histories.size
 
     override fun onBindViewHolder(viewHolder: HistoryViewHolder, position: Int) {
-        viewHolder.bindView(histories[position].recipient, histories[position].messsage,histories[position].time, position)
+        viewHolder.bindView(histories[position].recipient, histories[position].message,histories[position].time.toString(), position)
     }
 
     inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

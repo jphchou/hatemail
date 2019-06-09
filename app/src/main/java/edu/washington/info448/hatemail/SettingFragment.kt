@@ -26,23 +26,23 @@ class SettingFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
 
     override fun onResume() {
         super.onResume()
-        PreferenceManager.getDefaultSharedPreferences(HateMailApp.getSingletonInstance()).registerOnSharedPreferenceChangeListener(this)
+        PreferenceManager.getDefaultSharedPreferences(HateMail.instance).registerOnSharedPreferenceChangeListener(this)
 
     }
 
     override fun onPause() {
-        PreferenceManager.getDefaultSharedPreferences(HateMailApp.getSingletonInstance()).unregisterOnSharedPreferenceChangeListener(this)
+        PreferenceManager.getDefaultSharedPreferences(HateMail.instance).unregisterOnSharedPreferenceChangeListener(this)
         super.onPause()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
 
         if(key == "darkMode"){
-            HateMailApp.getSingletonInstance().setIsNightModeEnabled(PreferenceManager.getDefaultSharedPreferences(HateMailApp.getSingletonInstance()).getBoolean("darkMode", false))
+            HateMailApp.getSingletonInstance().setIsNightModeEnabled(PreferenceManager.getDefaultSharedPreferences(HateMail.instance).getBoolean("darkMode", false))
         }
 
         if(key == "editParameter"){
-            HateMailApp.getSingletonInstance().setParameter(PreferenceManager.getDefaultSharedPreferences(HateMailApp.getSingletonInstance()).getString("editParameter", ""))
+            HateMailApp.getSingletonInstance().setParameter(PreferenceManager.getDefaultSharedPreferences(HateMail.instance).getString("editParameter", ""))
         }
     }
 

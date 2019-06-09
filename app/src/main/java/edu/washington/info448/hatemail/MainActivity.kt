@@ -28,8 +28,8 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.i("hahahahahaha", HateMailApp.getSingletonInstance().isNightModeEnabled().toString())
-        if (HateMailApp.getSingletonInstance().isNightModeEnabled() == true) {
+        Log.i("hahahahahaha", HateMail.instance.isNightModeEnabled().toString())
+        if (HateMail.instance.isNightModeEnabled() == true) {
             setTheme(R.style.dark)
         } else {
             setTheme(R.style.light)
