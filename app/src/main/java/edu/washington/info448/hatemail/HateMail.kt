@@ -3,6 +3,7 @@ package edu.washington.info448.hatemail
 import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import android.support.v7.app.AppCompatDelegate
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -21,6 +22,7 @@ class HateMail: Application() {
     }
 
     override fun onCreate() {
+
         super.onCreate()
         Log.i("test", "hello")
         instance = this
@@ -31,6 +33,11 @@ class HateMail: Application() {
 
         val mPrefs: SharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this)
         isNightModeEnabled = mPrefs.getBoolean("darkMode", false)
+        if(isNightModeEnabled == false){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
         inputParameter = mPrefs.getString("editParameter", "")
 
         val json = this.getSharedPreferences("prefs", 0).getString("Histories", "")

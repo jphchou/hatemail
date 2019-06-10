@@ -14,13 +14,14 @@ import android.view.ViewGroup
 import java.util.prefs.Preferences
 import android.preference.Preference as Preference
 import android.preference.PreferenceManager
+import android.support.v7.app.AppCompatDelegate
 import android.util.Log
+import android.view.ContextThemeWrapper
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 
 class SettingFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
-
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.fragment_setting, rootKey)
@@ -41,6 +42,11 @@ class SettingFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
 
         if(key == "darkMode"){
             HateMail.instance.setIsNightModeEnabled(PreferenceManager.getDefaultSharedPreferences(HateMail.instance).getBoolean("darkMode", false))
+            if(HateMail.instance.isNightModeEnabled() == false){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }else{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
         }
 
         if(key == "editParameter"){

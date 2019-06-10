@@ -3,6 +3,7 @@ package edu.washington.info448.hatemail
 import android.app.Application
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import android.support.v7.app.AppCompatDelegate
 import android.util.Log
 
 class HateMailApp :Application(){
@@ -16,6 +17,11 @@ class HateMailApp :Application(){
         val mPrefs:SharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this)
         isNightModeEnabled = mPrefs.getBoolean("darkMode", false)
         inputParameter = mPrefs.getString("editParameter", "")
+        if(isNightModeEnabled == false){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
     }
 
     fun setParameter(inputParameter: String){

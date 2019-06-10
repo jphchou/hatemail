@@ -28,12 +28,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     lateinit var mySchedules: ArrayList<Schedule>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.i("hahahahahaha", HateMail.instance.isNightModeEnabled().toString())
-        if (HateMail.instance.isNightModeEnabled() == true) {
-            setTheme(R.style.dark)
-        } else {
-            setTheme(R.style.light)
-        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 

@@ -5,7 +5,7 @@
         background="#FFFFFF" visibility="visible">
 
 
-    <SwitchPreferenceCompat
+    <SwitchPreference
             app:key="darkMode"
             app:title="Dark Mode"/>
 
