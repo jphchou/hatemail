@@ -25,7 +25,7 @@ class ScheduleRecyclerViewAdapter(var schedules:ArrayList<Schedule>) : RecyclerV
         fun bindView(recipient: String, message:String, time: String, id: Int?, position: Int) {
             itemView.recipient.text = recipient
             itemView.message.text = message
-            itemView.time.text = "every ${time.toInt() / 1000} sec"
+            itemView.time.text = "every ${time.toInt() / 60000} min"
             itemView.setOnClickListener { onScheduleListClickedListener?.invoke(id!!, position) }
         }
     }
