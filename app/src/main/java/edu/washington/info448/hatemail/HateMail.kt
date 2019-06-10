@@ -12,7 +12,8 @@ class HateMail: Application() {
     private var isNightModeEnabled:Boolean = false
     private var inputParameter:String = ""
     private var histories:ArrayList<History> = arrayListOf()
-    var shouldRefresh = false
+    private var schedules:ArrayList<Schedule> = arrayListOf()
+
     lateinit var dataManager: DataManager
         private set
 
@@ -47,6 +48,14 @@ class HateMail: Application() {
         val histories: ArrayList<History>? = gson.fromJson(json, type)
         val historyList = histories ?: arrayListOf()
         this.histories = historyList
+
+
+        val json2 = this.getSharedPreferences("prefs", 0).getString("Schedules", "")
+        val type2 = object : TypeToken<List<Schedule>>() {
+        }.type
+        val schedules: ArrayList<Schedule>? = gson.fromJson(json2, type2)
+        val scheduleList = schedules ?: arrayListOf()
+        this.schedules = scheduleList
     }
 
     fun setParameter(inputParameter: String){
@@ -61,11 +70,19 @@ class HateMail: Application() {
         return histories
     }
 
+    fun getSchedules(): ArrayList<Schedule> {
+        return schedules
+    }
+
     fun setIsNightModeEnabled(isNightModeEnabled: Boolean) {
         this.isNightModeEnabled = isNightModeEnabled
     }
 
     fun updateHistory(newList: ArrayList<History>) {
         this.histories = newList
+    }
+
+    fun updateSchedules(newList: ArrayList<Schedule>) {
+        this.schedules = newList
     }
 }

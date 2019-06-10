@@ -13,17 +13,26 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlin.collections.ArrayList
 import android.R.id.edit
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Intent
+import android.os.SystemClock
 import android.preference.PreferenceManager
+import android.support.v4.app.DialogFragment
+import android.support.v4.app.Fragment
 import android.support.v7.app.ActionBar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 
 
-class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
-    var histories = arrayListOf(his1, his2, his3)
-    var schedules = arrayListOf(sche1, sche2, sche3)
+class MainActivity : AppCompatActivity(),
+    SharedPreferences.OnSharedPreferenceChangeListener,
+    ScheduleListFragment.OnScheduleSelectListener,
+    ConfirmDialog.ConfirmDialogListener {
+
+    var curScheduleId: Int? = null
+    var curSchedulePosition: Int? = null
     lateinit var myHistories: ArrayList<History>
     lateinit var mySchedules: ArrayList<Schedule>
 
@@ -37,9 +46,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         val prefsEditor = appSharedPrefs.edit()
         val gson = Gson()
         /////
-        /*val json = appSharedPrefs.getString("Histories", "")
-        val type = object : TypeToken<List<History>>() {
-        }.type*/
 
         val json2: String = appSharedPrefs.getString("Schedules", "")
         val type2 = object : TypeToken<List<Schedule>>() {
@@ -52,6 +58,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
         this.myHistories = HateMail.instance.getHistory()
         this.myHistories.sortByDescending{it.time}
+        this.mySchedules = HateMail.instance.getSchedules()
 
         val fragmentAdapter = MyPagerAdapter(supportFragmentManager)
         fragmentAdapter.myHistories = this.myHistories
@@ -93,9 +100,53 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             val histories: ArrayList<History>? = gson.fromJson(json, type)
             val historyList = histories ?: arrayListOf()
             HateMail.instance.updateHistory(historyList)
+            historyList.sortByDescending{it.time}
 
-            finish()
-            startActivity(this.intent)
+            (viewpager_main.adapter!! as MyPagerAdapter).myHistories = historyList
+            (viewpager_main.adapter!! as MyPagerAdapter).notifyDataSetChanged()
         }
+
+        if(key == "Schedules") {
+            val json = applicationContext!!.getSharedPreferences("prefs", 0).getString("Schedules", "")
+            val type = object : TypeToken<List<Schedule>>() {
+            }.type
+            val gson = Gson()
+            val schedules: ArrayList<Schedule>? = gson.fromJson(json, type)
+            val scheduleList = schedules ?: arrayListOf()
+            HateMail.instance.updateSchedules(scheduleList)
+
+            (viewpager_main.adapter!! as MyPagerAdapter).mySchedules = scheduleList
+            viewpager_main.adapter!!.notifyDataSetChanged()
+        }
+    }
+
+    override fun onScheduleSelect(id: Int, position: Int) {
+        curScheduleId = id
+        curSchedulePosition = position
+        val confirmDialog = ConfirmDialog.newInstance()
+        confirmDialog.show(supportFragmentManager, "confirm")
+    }
+
+    override fun onDialogPositiveClick(dialog: DialogFragment) {
+        val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(applicationContext, MessageReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(applicationContext, curScheduleId!!, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        alarmManager.cancel(pendingIntent)
+        curScheduleId = null
+
+        val appSharedPrefs = this.getSharedPreferences("prefs", 0)
+        val prefsEditor = appSharedPrefs.edit()
+        var curJson = appSharedPrefs.getString("Schedules", "")
+        val gson = Gson()
+        val type = object : TypeToken<List<Schedule>>() {
+        }.type
+        var curSchedules: MutableList<Schedule>? = gson.fromJson(curJson, type)
+        if (curSchedules == null) {
+            curSchedules = mutableListOf()
+        } else {
+            curSchedules.removeAt(curSchedulePosition!!)
+        }
+        prefsEditor.putString("Schedules", gson.toJson(curSchedules))
+        prefsEditor.commit()
     }
 }

@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_history.*
 
 
 class ScheduleListFragment : Fragment() {
-//    private var listener: OnFragmentInteractionListener? = null
+    private var listener: OnScheduleSelectListener? = null
 
     companion object {
         val  SCHEDULE_KEY= "schedule_key"
@@ -42,9 +42,11 @@ class ScheduleListFragment : Fragment() {
         Log.i("test", "running fragment")
         arguments?.let {
             val scheduleList = it.getParcelableArrayList<Schedule>(SCHEDULE_KEY)as ArrayList<Schedule>
-
             val adapter = ScheduleRecyclerViewAdapter(scheduleList)
             val scheduleListView = rootView.findViewById(R.id.historyListView) as RecyclerView
+            adapter.onScheduleListClickedListener = { id, position ->
+                listener!!.onScheduleSelect(id, position)
+            }
             scheduleListView.adapter = adapter
             scheduleListView.setHasFixedSize(true)
         }
@@ -52,5 +54,18 @@ class ScheduleListFragment : Fragment() {
         return rootView
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        listener = context as OnScheduleSelectListener
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
+
+    interface OnScheduleSelectListener {
+        fun onScheduleSelect(id: Int, position: Int)
+    }
 
 }
