@@ -15,6 +15,8 @@ import java.util.prefs.Preferences
 import android.preference.Preference as Preference
 import android.preference.PreferenceManager
 import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 
 class SettingFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -38,11 +40,11 @@ class SettingFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
 
         if(key == "darkMode"){
-            HateMailApp.getSingletonInstance().setIsNightModeEnabled(PreferenceManager.getDefaultSharedPreferences(HateMail.instance).getBoolean("darkMode", false))
+            HateMail.instance.setIsNightModeEnabled(PreferenceManager.getDefaultSharedPreferences(HateMail.instance).getBoolean("darkMode", false))
         }
 
         if(key == "editParameter"){
-            HateMailApp.getSingletonInstance().setParameter(PreferenceManager.getDefaultSharedPreferences(HateMail.instance).getString("editParameter", ""))
+            HateMail.instance.setParameter(PreferenceManager.getDefaultSharedPreferences(HateMail.instance).getString("editParameter", ""))
         }
     }
 

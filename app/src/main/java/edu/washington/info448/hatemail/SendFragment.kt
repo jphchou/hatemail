@@ -3,6 +3,7 @@ package edu.washington.info448.hatemail
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -39,6 +40,11 @@ class SendFragment: Fragment() {
             if (message!!.fields.size >= i + 1) {
                 val field = message!!.fields[i]
                 txtView.text = field
+                if (field == "From") {
+                    val edtResID = resources.getIdentifier("edt_param%d".format(i+1), "id", context!!.packageName)
+                    val edtView = rootView.findViewById<TextView>(edtResID)
+                    edtView.text = PreferenceManager.getDefaultSharedPreferences(rootView.context).getString("editParameter", "")
+                }
             } else {
                 val edtResID = resources.getIdentifier("edt_param%d".format(i+1), "id", context!!.packageName)
                 val edtView = rootView.findViewById<TextView>(edtResID)

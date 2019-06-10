@@ -17,6 +17,8 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import edu.washington.jchou8.quizdroid.InsultListFragment
 
 const val MESSAGE_LIST_FRAG = "MESSAGE_LIST_FRAG"
@@ -100,12 +102,32 @@ class MessageActivity : AppCompatActivity(),
         val intent = Intent(applicationContext, MessageReceiver::class.java)
         intent.putExtra("message", message!!)
         intent.putExtra("phone", phone!!)
-        val pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val schedule = Schedule(phone!!, message!!, freq!!, pendingIntent)
+        val reqCode = System.currentTimeMillis().toInt()
+        val pendingIntent = PendingIntent.getBroadcast(applicationContext, reqCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val schedule = Schedule(phone!!, message!!, freq!!, reqCode)
         alarmManager.setRepeating(
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
             SystemClock.elapsedRealtime(),
             freq!!,
             pendingIntent)
+
+        val appSharedPrefs = this.getSharedPreferences("prefs", 0)
+        val prefsEditor = appSharedPrefs.edit()
+        var curJson = appSharedPrefs.getString("Schedules", "")
+        val gson = Gson()
+        val type = object : TypeToken<List<Schedule>>() {
+        }.type
+        var curSchedules: MutableList<Schedule>? = gson.fromJson(curJson, type)
+        Log.i("FUCK", curSchedules.toString())
+        if (curSchedules == null) {
+            curSchedules = mutableListOf(schedule)
+        } else {
+            curSchedules.add(schedule)
+        }
+        prefsEditor.putString("Schedules", gson.toJson(curSchedules))
+        prefsEditor.commit()
+
+        startActivity(Intent(applicationContext, MainActivity::class.java))
+        finish()
     }
 }

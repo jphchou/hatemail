@@ -14,18 +14,18 @@ import com.google.gson.reflect.TypeToken
 import kotlin.collections.ArrayList
 import android.R.id.edit
 import android.content.Intent
+import android.preference.PreferenceManager
 import android.support.v7.app.ActionBar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     var histories = arrayListOf(his1, his2, his3)
     var schedules = arrayListOf(sche1, sche2, sche3)
     lateinit var myHistories: ArrayList<History>
     lateinit var mySchedules: ArrayList<Schedule>
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i("hahahahahaha", HateMail.instance.isNightModeEnabled().toString())
@@ -39,28 +39,25 @@ class MainActivity : AppCompatActivity() {
 
         // set up share preference
         val appSharedPrefs = this.getSharedPreferences("prefs", 0)
+        appSharedPrefs.registerOnSharedPreferenceChangeListener(this)
         val prefsEditor = appSharedPrefs.edit()
         val gson = Gson()
         /////
-        val dummyHistory = gson.toJson(histories)
-        prefsEditor.putString("Histories", dummyHistory)
-        prefsEditor.commit()
-        val dummySchedule = gson.toJson(schedules)
-        prefsEditor.putString("Schedules", dummySchedule)
-        prefsEditor.commit()
-        /////
-        val json = appSharedPrefs.getString("Histories", "")
+        /*val json = appSharedPrefs.getString("Histories", "")
         val type = object : TypeToken<List<History>>() {
-        }.type
+        }.type*/
 
-        val json2 = appSharedPrefs.getString("Schedules", "")
+        val json2: String = appSharedPrefs.getString("Schedules", "")
         val type2 = object : TypeToken<List<Schedule>>() {
         }.type
 
-        this.myHistories = gson.fromJson(json, type)
-        this.mySchedules = gson.fromJson(json2, type2)
+        //val histories: ArrayList<History>? = gson.fromJson(json, type)
+        val schedules: ArrayList<Schedule>? = gson.fromJson(json2, type2)
+        //this.myHistories = histories ?: arrayListOf()
+        this.mySchedules = schedules ?: arrayListOf()
 
-
+        this.myHistories = HateMail.instance.getHistory()
+        this.myHistories.sortByDescending{it.time}
 
         val fragmentAdapter = MyPagerAdapter(supportFragmentManager)
         fragmentAdapter.myHistories = this.myHistories
@@ -82,9 +79,29 @@ class MainActivity : AppCompatActivity() {
 //        supportFragmentManager.beginTransaction()
 //            .replace(R.id.container, settingFragment, "SETTING_FRAGMENT")
 //            .commit()
-        val intent = Intent(this, PreferencesActivity::class.java)
+        val nextActivity = when(item!!.itemId) {
+            R.id.schedule -> MessageActivity::class.java
+            else -> PreferencesActivity::class.java
+        }
+        val intent = Intent(this, nextActivity)
 
         startActivity(intent)
         return super.onOptionsItemSelected(item)
+    }
+
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+        if(key == "Histories") {
+            val json = applicationContext!!.getSharedPreferences("prefs", 0).getString("Histories", "")
+            val type = object : TypeToken<List<History>>() {
+            }.type
+            val gson = Gson()
+            val histories: ArrayList<History>? = gson.fromJson(json, type)
+            val historyList = histories ?: arrayListOf()
+            HateMail.instance.updateHistory(historyList)
+
+            finish()
+            startActivity(this.intent)
+        }
     }
 }
