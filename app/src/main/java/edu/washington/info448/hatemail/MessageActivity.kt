@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Message
 import android.os.SystemClock
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.DialogFragment
@@ -28,11 +29,13 @@ const val SEND_FRAG = "SEND_FRAG"
 class MessageActivity : AppCompatActivity(),
     InsultListFragment.OnMessageSelectListener,
     SendFragment.OnMessageSendListener,
-    PreviewDialog.PreviewDialogListener {
+    PreviewDialog.PreviewDialogListener,
+    MessageTypePreviewDialog.PreviewDialogListener {
 
     private var message: String? = null
     private var freq: Long? = null
     private var phone: String? = null
+    private var position: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,13 +66,30 @@ class MessageActivity : AppCompatActivity(),
     }
 
     override fun onMessageSelect(position: Int) {
-        val message = HateMail.instance.dataManager.getData()[position]
-        val sendFrag = SendFragment.newInstance(message)
-        supportFragmentManager.beginTransaction().run {
-            replace(R.id.message_container, sendFrag, SEND_FRAG)
-            addToBackStack(null)
-            commit()
+        val message = HateMail.instance.dataManager.getData()[position!!]
+        this.position = position
+        var reqUrl = "http://www.foaas.com%s".format(message.url)
+        message.fields.forEach{
+            val key = it.toLowerCase()
+            reqUrl = reqUrl.replace(":%s".format(key), "[%s]".format(key))
         }
+        val queue = Volley.newRequestQueue(applicationContext)
+        val stringRequest = object: StringRequest(Request.Method.GET, reqUrl,
+            Response.Listener<String> { response ->
+                val previewDialog = MessageTypePreviewDialog.newInstance(response)
+                previewDialog.show(supportFragmentManager, "preview")
+            },
+            Response.ErrorListener {error ->
+                Log.e(TAG, "Request failed: %s".format(error.toString()))
+            })
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Accept"] = "text/plain"
+                return headers
+            }
+        }
+        queue.add(stringRequest)
     }
 
     fun getReqUrl(url: String, fields: Map<String, String>): String {
@@ -101,6 +121,16 @@ class MessageActivity : AppCompatActivity(),
             }
         }
         queue.add(stringRequest)
+    }
+
+    override fun onDialogSelect(dialog: DialogFragment) {
+        val message = HateMail.instance.dataManager.getData()[position!!]
+        val sendFrag = SendFragment.newInstance(message)
+        supportFragmentManager.beginTransaction().run {
+            replace(R.id.message_container, sendFrag, SEND_FRAG)
+            addToBackStack(null)
+            commit()
+        }
     }
 
     override fun onDialogPositiveClick(dialog: DialogFragment) {
