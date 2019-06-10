@@ -26,8 +26,8 @@ class HistoryRecyclerViewAdapter(var histories:ArrayList<History>) : RecyclerVie
 
     inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindView(recipient: String, message:String, time: Date, position: Int) {
-            itemView.recipient.text = recipient
-            itemView.message.text = message
+            itemView.recipient.text = message
+            itemView.message.text = recipient
             itemView.time.text = DateUtils.getRelativeTimeSpanString(time.time)
             itemView.setOnClickListener { onHistoryClickedListenr?.invoke(position) }
         }
