@@ -7,6 +7,8 @@ import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.telephony.PhoneNumberUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +30,8 @@ class SendFragment: Fragment() {
         arguments?.let {
             message = it.getParcelable(ARG_MESSAGE)
         }
+        Log.i("SendFrag", isValidPhoneNumber("5099428181").toString())
+        Log.i("SendFrag", isValidPhoneNumber("6").toString())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -58,10 +62,10 @@ class SendFragment: Fragment() {
             val edtPhone = rootView.findViewById<TextView>(R.id.edt_phone)
             val edtFreq = rootView.findViewById<TextView>(R.id.edt_freq)
             val fields = mutableMapOf<String, String>()
-            if (edtPhone.text.isBlank()) {
-                Toast.makeText(context, "No phone number provided.", Toast.LENGTH_SHORT).show()
-            } else if (edtFreq.text.isBlank()) {
-                Toast.makeText(context, "No frequency provided.", Toast.LENGTH_SHORT).show()
+            if (!isValidPhoneNumber(edtPhone.text.toString())) {
+                Toast.makeText(context, "Invalid phone number.", Toast.LENGTH_SHORT).show()
+            } else if (edtFreq.text.isBlank() || edtFreq.text.toString().toInt()  <= 0) {
+                Toast.makeText(context, "No frequency provided or invalid frequency.", Toast.LENGTH_SHORT).show()
             } else {
                 val freq = edtFreq.text.toString().toIntOrNull()
                 if (freq === null || freq <= 0) {
@@ -107,6 +111,10 @@ class SendFragment: Fragment() {
     override fun onDetach() {
         super.onDetach()
         listener = null
+    }
+
+    private fun isValidPhoneNumber(number: String): Boolean{
+        return number.matches("""^[+]?[0-9]{10,13}$""".toRegex())
     }
 
     interface OnMessageSendListener {
