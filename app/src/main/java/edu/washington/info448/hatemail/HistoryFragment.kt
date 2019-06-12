@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import kotlinx.android.synthetic.main.fragment_history.*
 import android.widget.TextView
+import com.google.gson.Gson
 
 import kotlinx.android.synthetic.main.fragment_history.*
 
@@ -46,6 +47,14 @@ class HistoryFragment : Fragment() {
             val historyListView = rootView.findViewById(R.id.historyListView) as RecyclerView
             historyListView.adapter = adapter
             historyListView.setHasFixedSize(true)
+        }
+
+        val clearHistoryBtn = rootView.findViewById<Button>(R.id.clear_history_btn)
+        clearHistoryBtn.setOnClickListener {
+            val appSharedPrefs = context!!.getSharedPreferences("prefs", 0)
+            val prefsEditor = appSharedPrefs.edit()
+            prefsEditor.putString("Histories", "")
+            prefsEditor.commit()
         }
 
         return rootView

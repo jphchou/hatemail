@@ -51,6 +51,8 @@ class ScheduleListFragment : Fragment() {
             scheduleListView.setHasFixedSize(true)
         }
 
+        rootView.findViewById<Button>(R.id.clear_history_btn).visibility = View.GONE
+
         return rootView
     }
 
